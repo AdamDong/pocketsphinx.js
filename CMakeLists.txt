@@ -61,7 +61,7 @@ include_directories("${sphinx_root}/pocketsphinx/include")
 set(pocketsphinx_folder "${sphinx_root}/pocketsphinx/src/libpocketsphinx")
 
 # PocketSphinx source files
-set(pocketsphinx_src_files acmod.c bin_mdef.c blkarray_list.c dict.c dict2pid.c fsg_history.c fsg_lextree.c fsg_search.c hmm.c mdef.c ms_gauden.c ms_mgau.c ms_senone.c ngram_search.c ngram_search_fwdtree.c ngram_search_fwdflat.c phone_loop_search.c pocketsphinx.c ps_lattice.c ps_mllr.c ptm_mgau.c s2_semi_mgau.c tmat.c vector.c kws_search.c kws_detections.c allphone_search.c ps_alignment.c state_align_search.c)
+set(pocketsphinx_src_files ps_alignment.c state_align_search.c acmod.c bin_mdef.c blkarray_list.c dict.c dict2pid.c fsg_history.c fsg_lextree.c fsg_search.c hmm.c mdef.c ms_gauden.c ms_mgau.c ms_senone.c ngram_search.c ngram_search_fwdtree.c ngram_search_fwdflat.c phone_loop_search.c pocketsphinx.c ps_lattice.c ps_mllr.c ptm_mgau.c s2_semi_mgau.c tmat.c vector.c kws_search.c kws_detections.c allphone_search.c)
 set(pocketsphinx_srcs "")
 foreach(cfile ${pocketsphinx_src_files})
     set(pocketsphinx_srcs ${pocketsphinx_srcs} "${pocketsphinx_folder}/${cfile}")
@@ -118,7 +118,7 @@ endif()
 
 # Adding custom target for the JavaScript library.
 add_custom_target(${ps_lib_js} ALL
-    COMMAND ${CMAKE_C_COMPILER} -Oz -s TOTAL_MEMORY=100663296 -s EMCC_DEBUG=1 -s VERBOSE=1 -s ASSERTIONS=1 --bind --memory-init-file 0 ${CMAKE_SHARED_LIBRARY_PREFIX}${ps_lib}${CMAKE_SHARED_LIBRARY_SUFFIX} -o ${ps_lib_js} ${EMBED}
+    COMMAND ${CMAKE_C_COMPILER} -Oz -s TOTAL_MEMORY=100663296 -s DEMANGLE_SUPPORT=1 --bind --memory-init-file 0 ${CMAKE_SHARED_LIBRARY_PREFIX}${ps_lib}${CMAKE_SHARED_LIBRARY_SUFFIX} -o ${ps_lib_js} ${EMBED}
   DEPENDS ${ps_lib}
   )
 
