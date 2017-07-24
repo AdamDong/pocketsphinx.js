@@ -137,10 +137,10 @@ namespace pocketsphinxjs {
     //const char* h = ps_get_hyp(decoder, NULL);
     //current_hyp = (h == NULL) ? "" : h;
 
-    int16 buf[2048];
-    size_t nread;
-    int16 const *bptr;
-    int nfr, wend;
+    //int16 buf[2048];
+    //size_t nread;
+    //int16 const *bptr;
+    int nfr;
 
     dict = decoder->dict;
     d2p = decoder->d2p;
@@ -157,11 +157,15 @@ namespace pocketsphinxjs {
     acmod_start_utt(acmod);
     ps_search_start(search);
 
+    const int16 * bufarr = (int16 *) &buffer[0];
+    size_t bufsize = buffer.size();
+    /*
     short int * bufarr = (short int *) &buffer[0];
     size_t bufsize = buffer.size();
 
     size_t cnt = 0;
 
+    
     while(cnt < bufsize) {
     	memset(buf, 0, sizeof(int16) * 2048);
     	int i, j;
@@ -179,10 +183,18 @@ namespace pocketsphinxjs {
         //printf("processed %d frames\n", nfr);
         }
     }
+    */
+
+    while ((nfr = acmod_process_raw(acmod, &bufarr, &bufsize, FALSE)) > 0) {
+        while (acmod->n_feat_frame > 0) {
+            ps_search_step(search, acmod->output_frame);
+            acmod_advance(acmod);
+        }
+    //printf("processed %d frames\n", nfr);
+    }
 
     acmod_end_utt(acmod);
     ps_search_finish(search);
-
 
     return SUCCESS;
   }
