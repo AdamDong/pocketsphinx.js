@@ -1,5 +1,6 @@
 #include "psRecognizer.h"
 #include "pocketsphinx.h"
+#include "acmod.h"
 #include "pocketsphinxjs-config.h"
 
 namespace pocketsphinxjs {
@@ -129,6 +130,84 @@ namespace pocketsphinxjs {
     return SUCCESS;
   }
 
+  ReturnType Recognizer::wordAlign(const std::vector<int16_t>& buffer, const std::string& word) {
+    if ((decoder == NULL) || (!is_recording)) return BAD_STATE;
+    if (buffer.size() == 0)
+      return RUNTIME_ERROR;
+    //ps_process_raw(decoder, (short int *) &buffer[0], buffer.size(), 0, 0);
+    //const char* h = ps_get_hyp(decoder, NULL);
+    //current_hyp = (h == NULL) ? "" : h;
+
+    int16 buf[2048];
+    size_t nread;
+    int16 const *bptr;
+    int nfr, wend;
+
+    dict = decoder->dict;
+    d2p = decoder->d2p;
+    acmod = decoder->acmod;
+
+    al = ps_alignment_init(d2p);
+    ps_alignment_add_word(al, dict_wordid(dict, "<s>"), 0);
+    ps_alignment_add_word(al, dict_wordid(dict, word.c_str()), 0);
+    ps_alignment_add_word(al, dict_wordid(dict, "</s>"), 0);
+    ps_alignment_populate(al);
+
+    search = state_align_search_init("state_align", cmd_line, acmod, al);
+
+    acmod_start_utt(acmod);
+    ps_search_start(search);
+
+    short int * bufarr = (short int *) &buffer[0];
+    size_t bufsize = buffer.size();
+
+    size_t cnt = 0;
+
+    while(cnt < bufsize) {
+    	memset(buf, 0, sizeof(int16) * 2048);
+    	int i, j;
+    	for (int i = cnt, j = 0; i < bufsize && j < 2048; i++, j++) {
+    		buf[j] = bufarr[i];
+    	}
+    	cnt += 2048;
+    	nread = j;
+    	bptr = buf; 
+        while ((nfr = acmod_process_raw(acmod, &bptr, &nread, FALSE)) > 0) {
+            while (acmod->n_feat_frame > 0) {
+                ps_search_step(search, acmod->output_frame);
+                acmod_advance(acmod);
+            }
+        //printf("processed %d frames\n", nfr);
+        }
+    }
+
+    acmod_end_utt(acmod);
+    ps_search_finish(search);
+
+
+    return SUCCESS;
+  }
+
+  ReturnType Recognizer::getWordAlignSeg(Segmentation& seg) {
+    if (decoder == NULL) return BAD_STATE;
+    seg.clear();
+
+    ps_alignment_iter_t *itor = ps_alignment_phones(al);
+    while (itor) {
+        ae = ps_alignment_iter_get(itor);
+        SegItem segItem;
+      	segItem.word = ae->id.pid.cipid;
+        segItem.start = ae->start / 100.0;
+        segItem.end = ae->duration / 100.0;
+        segItem.ascr = ae->score;
+        segItem.lscr = 0;
+        seg.push_back(segItem);
+        itor = ps_alignment_iter_next(itor);
+    }
+
+    return SUCCESS;
+  }
+
   std::string Recognizer::lookupWord(const std::string& word) {
     std::string output = "";
     if (word.size() > 0) {
@@ -172,6 +251,8 @@ namespace pocketsphinxjs {
   void Recognizer::cleanup() {
     if (decoder) ps_free(decoder);
     if (logmath) logmath_free(logmath);
+    if (search) ps_search_free(search);
+    if (al) ps_alignment_free(al);
     decoder = NULL;
     logmath = NULL;
   }
@@ -231,7 +312,7 @@ namespace pocketsphinxjs {
       argv[index++] = (char*) i->second.c_str();
     }
 
-    cmd_ln_t * cmd_line = cmd_ln_parse_r(NULL, cont_args_def, argc, argv, FALSE);
+    cmd_line = cmd_ln_parse_r(NULL, cont_args_def, argc, argv, FALSE);
     if (cmd_line == NULL) {
       delete [] argv;
       return RUNTIME_ERROR;

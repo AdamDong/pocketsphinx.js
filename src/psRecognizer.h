@@ -11,6 +11,13 @@
 #include <emscripten/bind.h>
 #include "pocketsphinx.h"
 
+// For state alignment
+#include "dict.h"
+#include "acmod.h"
+#include "ps_alignment.h"
+#include "state_align_search.h"
+#include "pocketsphinx_internal.h"
+
 namespace pocketsphinxjs {
 
   enum ReturnType {
@@ -75,9 +82,11 @@ namespace pocketsphinxjs {
     ReturnType switchSearch(int);
     std::string getHyp();
     ReturnType getHypseg(Segmentation&);
+    ReturnType getWordAlignSeg(Segmentation&);
     ReturnType start();
     ReturnType stop();
     ReturnType process(const std::vector<int16_t>&);
+    ReturnType wordAlign(const std::vector<int16_t>&, const std::string&);
     std::string lookupWord(const std::string&);
     ~Recognizer();
     
@@ -99,6 +108,15 @@ namespace pocketsphinxjs {
     StringsSetType dictionaries;
     std::string default_language_model;
     std::string default_dictionary;
+
+    // state alignment variables
+    cmd_ln_t * cmd_line;
+    dict_t *dict;
+    dict2pid_t *d2p;
+    acmod_t *acmod;
+    ps_alignment_t *al;
+    ps_search_t *search;
+    ps_alignment_entry_t *ae;
  
   };
   
@@ -194,10 +212,12 @@ EMSCRIPTEN_BINDINGS(recognizer) {
     .function("switchSearch", &ps::Recognizer::switchSearch)
     .function("getHyp", &ps::Recognizer::getHyp)
     .function("getHypseg", &ps::Recognizer::getHypseg)
+    .function("getWordAlignSeg", &ps::Recognizer::getWordAlignSeg)
     .function("start", &ps::Recognizer::start)
     .function("stop", &ps::Recognizer::stop)
     .function("lookupWord", &ps::Recognizer::lookupWord)
-    .function("process", &ps::Recognizer::process);
+    .function("process", &ps::Recognizer::process)
+    .function("wordAlign", &ps::Recognizer::wordAlign);
 }
 
 #endif /* _PSRECOGNIZER_H_ */
