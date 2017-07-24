@@ -12,8 +12,6 @@
 #include "pocketsphinx.h"
 
 // For state alignment
-#include "dict.h"
-#include "acmod.h"
 #include "ps_alignment.h"
 #include "state_align_search.h"
 #include "pocketsphinx_internal.h"

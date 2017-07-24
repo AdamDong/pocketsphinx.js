@@ -1,6 +1,5 @@
 #include "psRecognizer.h"
 #include "pocketsphinx.h"
-#include "acmod.h"
 #include "pocketsphinxjs-config.h"
 
 namespace pocketsphinxjs {
