@@ -202,6 +202,15 @@ namespace pocketsphinxjs {
     if (decoder == NULL) return BAD_STATE;
     seg.clear();
 
+    // METADATA
+    SegItem segItem;
+  	segItem.word = "METADATA";
+    segItem.start = ps_alignment_n_words(al);
+    segItem.end = ps_alignment_n_phones(al);
+    segItem.ascr = ps_alignment_n_states(al);
+    segItem.lscr = 0;
+    seg.push_back(segItem);
+
     ps_alignment_iter_t *itor = ps_alignment_phones(al);
     while (itor) {
         ae = ps_alignment_iter_get(itor);
