@@ -148,6 +148,8 @@ namespace pocketsphinxjs {
 
     const char * word_c = word.c_str();
 
+    printf("Decoding word ==> %s\n", word_c);
+
     al = ps_alignment_init(d2p);
     ps_alignment_add_word(al, dict_wordid(dict, "<s>"), 0);
     ps_alignment_add_word(al, dict_wordid(dict, word_c), 0);
