@@ -2,6 +2,8 @@
 #include "pocketsphinx.h"
 #include "pocketsphinxjs-config.h"
 
+#include <emscripten.h>
+
 namespace pocketsphinxjs {
   typedef std::map<std::string, std::string> StringsMapType;
   typedef std::map<std::string, std::string>::iterator StringsMapIterator;
@@ -135,6 +137,11 @@ namespace pocketsphinxjs {
   	E_FATAL("ENTERING WORD ALIGN MODULE\n");
   	E_FATAL_SYSTEM("ENTERING WORD ALIGN MODULE\n");
   	E_INFO_NOFN("ENTERING WORD ALIGN MODULE\n");
+  	printf("ENTERING WORD ALIGN MODULE\n");
+
+  	EM_ASM(
+	    alert('hello world!');
+	  );
 
 
     if ((decoder == NULL) || (!is_recording)) return BAD_STATE;
@@ -153,13 +160,23 @@ namespace pocketsphinxjs {
     d2p = decoder->d2p;
     acmod = decoder->acmod;
 
-    const char * word_c = word.c_str();
+    E_INFO("RESUMING WORD ALIGN\n");
+  	E_FATAL("RESUMING WORD ALIGN\n");
+  	E_FATAL_SYSTEM("RESUMING WORD ALIGN\n");
+  	E_INFO_NOFN("RESUMING WORD ALIGN\n");
 
-    E_FATAL("Decoding word ==> %s\n", word_c);
+    const char * wordc = word.c_str();
+
+    E_FATAL("Decoding word ==> %s\n", wordc);
+    E_INFO("Decoding word ==> %s\n", wordc);
+  	E_FATAL("Decoding word ==> %s\n", wordc);
+  	E_FATAL_SYSTEM("Decoding word ==> %s\n", wordc);
+  	E_INFO_NOFN("Decoding word ==> %s\n", wordc);
+  	printf("Decoding word ==> %s\n", wordc);
 
     al = ps_alignment_init(d2p);
     ps_alignment_add_word(al, dict_wordid(dict, "<s>"), 0);
-    ps_alignment_add_word(al, dict_wordid(dict, word_c), 0);
+    ps_alignment_add_word(al, dict_wordid(dict, wordc), 0);
     ps_alignment_add_word(al, dict_wordid(dict, "</s>"), 0);
     ps_alignment_populate(al);
 
@@ -172,11 +189,22 @@ namespace pocketsphinxjs {
     size_t bufsize = 2048;
 
     E_FATAL("Buffer size: %u\n", arrsize);
+    E_INFO("Buffer size: %u\n", arrsize);
+  	E_FATAL("Buffer size: %u\n", arrsize);
+  	E_FATAL_SYSTEM("Buffer size: %u\n", arrsize);
+  	E_INFO_NOFN("Buffer size: %u\n", arrsize);
+  	printf("Buffer size: %u\n", arrsize);
 
     size_t start = 0, end = bufsize;
 
     while (start < end && end <= arrsize) {
     	E_FATAL("start : %u, end : %u\n", start, end);
+    	E_INFO("start : %u, end : %u\n", start, end);
+	  	E_FATAL("start : %u, end : %u\n", start, end);
+	  	E_FATAL_SYSTEM("start : %u, end : %u\n", start, end);
+	  	E_INFO_NOFN("start : %u, end : %u\n", start, end);
+	  	printf("start : %u, end : %u\n", start, end);
+
     	memset(buf, 0, sizeof(int16) * bufsize);
     	
     	for (int i = start, j = 0; i < end; i++, j++) {
