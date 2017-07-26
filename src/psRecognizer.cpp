@@ -130,6 +130,14 @@ namespace pocketsphinxjs {
   }
 
   ReturnType Recognizer::wordAlign(const std::vector<int16_t>& buffer, const std::string& word) {
+
+  	E_INFO("ENTERING WORD ALIGN MODULE\n");
+  	E_FATAL("ENTERING WORD ALIGN MODULE\n");
+  	E_FATAL_SYSTEM("ENTERING WORD ALIGN MODULE\n");
+  	E_INFO_NOFN("ENTERING WORD ALIGN MODULE\n");
+  	E_ERROR("ENTERING WORD ALIGN MODULE\n");
+
+
     if ((decoder == NULL) || (!is_recording)) return BAD_STATE;
     if (buffer.size() == 0)
       return RUNTIME_ERROR;
