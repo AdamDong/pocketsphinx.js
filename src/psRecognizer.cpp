@@ -2,7 +2,6 @@
 #include "pocketsphinx.h"
 #include "pocketsphinxjs-config.h"
 
-#include <emscripten.h>
 
 namespace pocketsphinxjs {
   typedef std::map<std::string, std::string> StringsMapType;
@@ -133,15 +132,7 @@ namespace pocketsphinxjs {
 
   ReturnType Recognizer::wordAlign(const std::vector<int16_t>& buffer, const std::string& word) {
 
-  	E_INFO("ENTERING WORD ALIGN MODULE\n");
-  	E_FATAL("ENTERING WORD ALIGN MODULE\n");
-  	E_FATAL_SYSTEM("ENTERING WORD ALIGN MODULE\n");
-  	E_INFO_NOFN("ENTERING WORD ALIGN MODULE\n");
-  	printf("ENTERING WORD ALIGN MODULE\n");
-
-  	EM_ASM(
-	    alert('hello world!');
-	  );
+  	size_t bufsize = 2048;
 
 
     if ((decoder == NULL) || (!is_recording)) return BAD_STATE;
@@ -151,7 +142,7 @@ namespace pocketsphinxjs {
     //const char* h = ps_get_hyp(decoder, NULL);
     //current_hyp = (h == NULL) ? "" : h;
 
-    int16 buf[2048];
+    int16 buf[bufsize];
     size_t nread;
     int16 const *bptr;
     int nfr;
@@ -160,19 +151,9 @@ namespace pocketsphinxjs {
     d2p = decoder->d2p;
     acmod = decoder->acmod;
 
-    E_INFO("RESUMING WORD ALIGN\n");
-  	E_FATAL("RESUMING WORD ALIGN\n");
-  	E_FATAL_SYSTEM("RESUMING WORD ALIGN\n");
-  	E_INFO_NOFN("RESUMING WORD ALIGN\n");
-
     const char * wordc = word.c_str();
 
-    E_FATAL("Decoding word ==> %s\n", wordc);
-    E_INFO("Decoding word ==> %s\n", wordc);
-  	E_FATAL("Decoding word ==> %s\n", wordc);
-  	E_FATAL_SYSTEM("Decoding word ==> %s\n", wordc);
-  	E_INFO_NOFN("Decoding word ==> %s\n", wordc);
-  	printf("Decoding word ==> %s\n", wordc);
+  	printf("\nDecoding word ==>\n");
 
     al = ps_alignment_init(d2p);
     ps_alignment_add_word(al, dict_wordid(dict, "<s>"), 0);
@@ -186,23 +167,12 @@ namespace pocketsphinxjs {
     ps_search_start(search);
 
     size_t arrsize = buffer.size();
-    size_t bufsize = 2048;
 
-    E_FATAL("Buffer size: %u\n", arrsize);
-    E_INFO("Buffer size: %u\n", arrsize);
-  	E_FATAL("Buffer size: %u\n", arrsize);
-  	E_FATAL_SYSTEM("Buffer size: %u\n", arrsize);
-  	E_INFO_NOFN("Buffer size: %u\n", arrsize);
   	printf("Buffer size: %u\n", arrsize);
 
     size_t start = 0, end = bufsize;
 
     while (start < end && end <= arrsize) {
-    	E_FATAL("start : %u, end : %u\n", start, end);
-    	E_INFO("start : %u, end : %u\n", start, end);
-	  	E_FATAL("start : %u, end : %u\n", start, end);
-	  	E_FATAL_SYSTEM("start : %u, end : %u\n", start, end);
-	  	E_INFO_NOFN("start : %u, end : %u\n", start, end);
 	  	printf("start : %u, end : %u\n", start, end);
 
     	memset(buf, 0, sizeof(int16) * bufsize);
@@ -217,14 +187,20 @@ namespace pocketsphinxjs {
                 ps_search_step(search, acmod->output_frame);
                 acmod_advance(acmod);
             }
-        	E_FATAL("processed %d frames\n", nfr);
+        	printf("processed %d frames\n", nfr);
+        }
+
+        start += bufsize;
+        end += bufsize;
+        if (end > arrsize) {
+        	end = arrsize;
         }
     }
 
     acmod_end_utt(acmod);
     ps_search_finish(search);
 
-    E_FATAL("aligned %d words, %d phones, and %d states\n", 
+    printf("aligned %d words, %d phones, and %d states\n", 
         ps_alignment_n_words(al), ps_alignment_n_phones(al),
         ps_alignment_n_states(al));
 
@@ -307,6 +283,8 @@ namespace pocketsphinxjs {
     if (al) ps_alignment_free(al);
     decoder = NULL;
     logmath = NULL;
+    search = NULL;
+    al = NULL;
   }
 
   ReturnType Recognizer::init(const Config& config) {
