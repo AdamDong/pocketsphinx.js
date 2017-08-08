@@ -130,14 +130,27 @@ namespace pocketsphinxjs {
     return SUCCESS;
   }
 
+  ReturnType Recognizer::testprint() {
+  	printf("%s\n", "JUST PRINT THIS");
+  	return SUCCESS;
+  }
+
   ReturnType Recognizer::wordAlign(const std::vector<int16_t>& buffer, const std::string& word) {
+
+  	const char * wordc = word.c_str();
+  	printf("\nDecoding word ==> %s\n", wordc);
 
   	size_t bufsize = 2048;
 
 
-    if ((decoder == NULL) || (!is_recording)) return BAD_STATE;
-    if (buffer.size() == 0)
+    if (decoder == NULL){
+    	printf("Decoder is NULL\n");
+    	return BAD_STATE;
+    }
+    if (buffer.size() == 0){
+  	  printf("%s\n", "Buffer IS EMPTY");
       return RUNTIME_ERROR;
+    }
     //ps_process_raw(decoder, (short int *) &buffer[0], buffer.size(), 0, 0);
     //const char* h = ps_get_hyp(decoder, NULL);
     //current_hyp = (h == NULL) ? "" : h;
@@ -151,9 +164,6 @@ namespace pocketsphinxjs {
     d2p = decoder->d2p;
     acmod = decoder->acmod;
 
-    const char * wordc = word.c_str();
-
-  	printf("\nDecoding word ==>\n");
   	std::cout << "Word to decode: " << wordc << "\n";
 
     al = ps_alignment_init(d2p);

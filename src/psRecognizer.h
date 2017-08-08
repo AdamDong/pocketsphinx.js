@@ -80,12 +80,17 @@ namespace pocketsphinxjs {
     ReturnType switchSearch(int);
     std::string getHyp();
     ReturnType getHypseg(Segmentation&);
-    ReturnType getWordAlignSeg(Segmentation&);
+    
     ReturnType start();
     ReturnType stop();
     ReturnType process(const std::vector<int16_t>&);
     ReturnType wordAlign(const std::vector<int16_t>&, const std::string&);
+    ReturnType getWordAlignSeg(Segmentation&);
+
+    ReturnType testprint();
+
     std::string lookupWord(const std::string&);
+
     ~Recognizer();
     
   private:
@@ -215,7 +220,8 @@ EMSCRIPTEN_BINDINGS(recognizer) {
     .function("stop", &ps::Recognizer::stop)
     .function("lookupWord", &ps::Recognizer::lookupWord)
     .function("process", &ps::Recognizer::process)
-    .function("wordAlign", &ps::Recognizer::wordAlign);
+    .function("wordAlign", &ps::Recognizer::wordAlign)
+    .function("testprint", &ps::Recognizer::testprint);
 }
 
 #endif /* _PSRECOGNIZER_H_ */
