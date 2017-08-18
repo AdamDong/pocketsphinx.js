@@ -1,5 +1,4 @@
 #include "psRecognizer.h"
-#include "pocketsphinx.h"
 #include "pocketsphinxjs-config.h"
 
 
@@ -128,6 +127,15 @@ namespace pocketsphinxjs {
     const char* h = ps_get_hyp(decoder, NULL);
     current_hyp = (h == NULL) ? "" : h;
     return SUCCESS;
+  }
+
+  ReturnType Recognizer::pronFeatex(const std::vector<int16_t>& buffer, const std::string& word, Feats& feats) {
+  	if (decoder != NULL)
+  		feats = featex(decoder, buffer, word);
+  	else
+  		return BAD_STATE;
+
+  	return SUCCESS;
   }
 
   ReturnType Recognizer::testprint() {

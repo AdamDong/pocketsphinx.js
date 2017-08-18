@@ -80,7 +80,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Oz --bind")
 include_directories("${CMAKE_BINARY_DIR}/include")
 
 # Building a shared library to be converted to JavaScript
-add_library(${ps_lib} SHARED "src/psRecognizer.cpp" ${pocketsphinx_srcs}  ${fe_srcs} ${feat_srcs} ${lm_srcs} ${util_srcs})
+add_library(${ps_lib} SHARED "src/psRecognizer.cpp" "src/featex.cpp" ${pocketsphinx_srcs}  ${fe_srcs} ${feat_srcs} ${lm_srcs} ${util_srcs})
 
 if(HMM_EMBED)
   if ((NOT HMM_BASE) OR (NOT HMM_FOLDERS))

@@ -16,6 +16,8 @@
 #include "state_align_search.h"
 #include "pocketsphinx_internal.h"
 
+#include "featex.h"
+
 namespace pocketsphinxjs {
 
   enum ReturnType {
@@ -65,6 +67,8 @@ namespace pocketsphinxjs {
   typedef std::vector<int> Integers;
   typedef std::vector<SegItem> Segmentation;
 
+  typedef std::vector<float> Feats;
+
   class Recognizer {
 
   public:
@@ -84,8 +88,11 @@ namespace pocketsphinxjs {
     ReturnType start();
     ReturnType stop();
     ReturnType process(const std::vector<int16_t>&);
+    
+    // Feature extraction for pronunciation evaluation
     ReturnType wordAlign(const std::vector<int16_t>&, const std::string&);
     ReturnType getWordAlignSeg(Segmentation&);
+    ReturnType pronFeatex(const std::vector<int16_t>&, const std::string&, Feats&);
 
     ReturnType testprint();
 
@@ -197,6 +204,7 @@ EMSCRIPTEN_BINDINGS(recognizer) {
   emscripten::register_vector<ps::ConfigItem>("Config");
   emscripten::register_vector<ps::SegItem>("Segmentation");
   emscripten::register_vector<int>("Integers");
+  emscripten::register_vector<float>("Feats");
 
   emscripten::value_object<ps::Grammar>("Grammar")
     .field("start", &ps::Grammar::start)
@@ -221,7 +229,8 @@ EMSCRIPTEN_BINDINGS(recognizer) {
     .function("lookupWord", &ps::Recognizer::lookupWord)
     .function("process", &ps::Recognizer::process)
     .function("wordAlign", &ps::Recognizer::wordAlign)
-    .function("testprint", &ps::Recognizer::testprint);
+    .function("testprint", &ps::Recognizer::testprint)
+    .function("pronFeatex", &ps::Recognizer::pronFeatex);
 }
 
 #endif /* _PSRECOGNIZER_H_ */
