@@ -129,6 +129,9 @@ namespace pocketsphinxjs {
     return SUCCESS;
   }
 
+  /*
+  	NEW FEATURE EXTRACTION FOR PRONUNCIATION EVALUATION
+  */
   ReturnType Recognizer::pronFeatex(const std::vector<int16_t>& buffer, const std::string& word, Feats& feats) {
   	if (decoder != NULL)
   		feats = featex(decoder, buffer, word);
@@ -138,11 +141,17 @@ namespace pocketsphinxjs {
   	return SUCCESS;
   }
 
+  /*
+  	TESTING THE PRINTING BUG
+  */
   ReturnType Recognizer::testprint() {
   	printf("%s\n", "JUST PRINT THIS");
   	return SUCCESS;
   }
 
+  /*
+  	OLD FEATURE EXTRACTION FUNCTION
+  */
   ReturnType Recognizer::wordAlign(const std::vector<int16_t>& buffer, const std::string& word) {
 
   	const char * wordc = word.c_str();
@@ -226,6 +235,9 @@ namespace pocketsphinxjs {
     return SUCCESS;
   }
 
+  /*
+  	Function to get word alignment segmentation - OLD FEATEX CODE
+  */
   ReturnType Recognizer::getWordAlignSeg(Segmentation& seg) {
     if (decoder == NULL) return BAD_STATE;
     seg.clear();
