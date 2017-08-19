@@ -61,7 +61,7 @@ The build is a classic CMake cross-compilation, using the toolchain provided by 
     $ cd .../pocketsphinx.js # This folder
     $ mkdir build
     $ cd build
-    $ cmake -DEMSCRIPTEN=1 -DCMAKE_TOOLCHAIN_FILE=path_to_emscripten/cmake/Modules/Platform/Emscripten.cmake ..
+    $ cmake -DEMSCRIPTEN=1 -DCMAKE_TOOLCHAIN_FILE=../../emsdk-portable/emscripten/1.37.16/cmake/Modules/Platform/Emscripten.cmake ..
     $ make
 
 This generates `pocketsphinx.js`. At this point, optimization level and other compilation parameters are hard-coded, so modify `CMakeLists.txt` directly if you would like to change them.
