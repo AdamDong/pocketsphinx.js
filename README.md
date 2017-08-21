@@ -3,6 +3,8 @@ PocketSphinx.js
 
 The purpose of this fork is to add some pronunciation evaluation related feature extraction in pocketsphinx.js. Look under `src/` folder to check `featex.h`, `featex.cpp`, `psRecognizer.h` and `psRecognizer.cpp` for relevant modifications. This work is done under GSoC 2017: Pronunciation Evaluation project and mentored by James Salsman. 
 
+For details check out posts at: http://pronunce.blogspot.in/ 
+
 ### Speech Recognition in JavaScript
 
 PocketSphinx.js is a speech recognizer that runs entirely in the web browser. It is built on:
