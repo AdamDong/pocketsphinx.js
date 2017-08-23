@@ -3,7 +3,12 @@ PocketSphinx.js
 
 ### GSoC 2017 Updates
 
-The purpose of this fork is to add some pronunciation evaluation related feature extraction in pocketsphinx.js. Look under `src/` folder to check `featex.h`, `featex.cpp`, `psRecognizer.h` and `psRecognizer.cpp` for relevant modifications. This work is done under GSoC 2017: Pronunciation Evaluation project and mentored by James Salsman. 
+The purpose of this fork is to add some pronunciation evaluation related feature extraction in pocketsphinx.js. Look under `src/` folder to check:
+ * [`featex.h`](https://github.com/brijmohan/pocketsphinx.js/blob/master/src/featex.h), 
+ * [`featex.cpp`](https://github.com/brijmohan/pocketsphinx.js/blob/master/src/featex.cpp), 
+ * [`psRecognizer.h`](https://github.com/brijmohan/pocketsphinx.js/blob/master/src/psRecognizer.h) and 
+ * [`psRecognizer.cpp`](https://github.com/brijmohan/pocketsphinx.js/blob/master/src/psRecognizer.cpp) 
+ for relevant modifications. This work is done under GSoC 2017: Pronunciation Evaluation project and mentored by James Salsman. The original source code for feature extraction written as a standalone C binary can be found at https://github.com/jsalsman/featex.
 
 For details check out posts at: http://pronunce.blogspot.in/ 
 
